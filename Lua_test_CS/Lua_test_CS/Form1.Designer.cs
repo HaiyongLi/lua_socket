@@ -74,7 +74,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.btn_test);
-            this.groupBox1.Location = new System.Drawing.Point(374, 93);
+            this.groupBox1.Location = new System.Drawing.Point(469, 93);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(401, 209);
             this.groupBox1.TabIndex = 2;
@@ -209,13 +209,13 @@
             this.dataGridViewData.Name = "dataGridViewData";
             this.dataGridViewData.ReadOnly = true;
             this.dataGridViewData.RowTemplate.Height = 23;
-            this.dataGridViewData.Size = new System.Drawing.Size(347, 476);
+            this.dataGridViewData.Size = new System.Drawing.Size(456, 476);
             this.dataGridViewData.TabIndex = 4;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(374, 59);
+            this.label5.Location = new System.Drawing.Point(469, 59);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 12);
             this.label5.TabIndex = 6;
@@ -223,14 +223,14 @@
             // 
             // tbLuaFilePath
             // 
-            this.tbLuaFilePath.Location = new System.Drawing.Point(459, 55);
+            this.tbLuaFilePath.Location = new System.Drawing.Point(554, 55);
             this.tbLuaFilePath.Name = "tbLuaFilePath";
             this.tbLuaFilePath.Size = new System.Drawing.Size(230, 21);
             this.tbLuaFilePath.TabIndex = 7;
             // 
             // btnLoadLuaFile
             // 
-            this.btnLoadLuaFile.Location = new System.Drawing.Point(688, 54);
+            this.btnLoadLuaFile.Location = new System.Drawing.Point(783, 54);
             this.btnLoadLuaFile.Name = "btnLoadLuaFile";
             this.btnLoadLuaFile.Size = new System.Drawing.Size(49, 23);
             this.btnLoadLuaFile.TabIndex = 8;
@@ -240,7 +240,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(393, 15);
+            this.button5.Location = new System.Drawing.Point(488, 15);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(161, 23);
             this.button5.TabIndex = 9;
@@ -251,7 +251,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(510, 355);
+            this.pictureBox1.Location = new System.Drawing.Point(605, 355);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(132, 136);
             this.pictureBox1.TabIndex = 10;
@@ -259,7 +259,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(579, 15);
+            this.button6.Location = new System.Drawing.Point(674, 15);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 11;
@@ -313,14 +313,13 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 300;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 552);
+            this.ClientSize = new System.Drawing.Size(876, 552);
             this.Controls.Add(this.btn_ConnSvc);
             this.Controls.Add(this.tb_Port);
             this.Controls.Add(this.label7);

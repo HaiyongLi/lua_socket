@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using LuaInterface;
 using System.Globalization;
 using System.Diagnostics;
+using System.Threading;
 
 
 namespace Lua_test_CS
@@ -18,6 +19,8 @@ namespace Lua_test_CS
         public string strLuaFilePath;
         private static Process p;
 
+        delegate void SetGridChannel();
+        SetGridChannel setGridChannel;
         public Form1()
         {
             InitializeComponent();
@@ -37,31 +40,32 @@ namespace Lua_test_CS
             btn_test.Enabled = false;
             button2.Enabled = false;
             button3.Enabled = false;
-            button4.Enabled = false;
+            button4.Enabled = true;
+            setGridChannel = SetChannelTableToGrid;
 
+            LoadLuaFile(null);
         }
 
         private void btn_test_Click(object sender, EventArgs e)
         {
-            //Lua netlua = new Lua();
-            //netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
-            //netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
-            //netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
-            //netlua.DoFile(strLuaFilePath);
-            //SetData();
-            // netlua.GetFunction("Add").Call();
             netlua.GetFunction(tbAdd.Text.Trim().ToString()).Call();
         }
 
-        public void GetData(double a)
+        public void GetData(int idx,double a)
         {
             string str = a.ToString();
-            MessageBox.Show(str);
+
+            data[idx] = (float)a;
+            //MessageBox.Show(a.ToString());
         }
 
-        public double SetData()
+        public double SetData(int idx)
         {
             double a = 0;
+            if (idx>=0)
+            {
+                
+            }
             //if (tbInput.Text.Trim() != "")
             //{
             //    a = Convert.ToDouble(tbInput.Text.Trim());
@@ -105,20 +109,24 @@ namespace Lua_test_CS
             column.ColumnName = "通道说明";
             dt.Columns.Add(column);
 
-            
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    string str = string.Format("第{0}个通道", i);
-            //    row = dt.NewRow();
-            //    row["通道序号"] = i;
-            //    row["工程值"] = i;            //将double类型按照一定的格式转换成string类型
-            //    row["通道说明"] = str;
-            //    dt.Rows.Add(row);
-            //}
-             
-            //MessageBox.Show(2.ToString("N", myNumFormatInfo));
-            dataGridViewData.DataSource = dt;
-             
+            column = new DataColumn();
+            column.AllowDBNull = true;
+            column.DataType = Type.GetType("System.String");
+            column.ColumnName = "函数名称";
+            dt.Columns.Add(column);
+
+            for (int i = 0; i < 20; i++)
+            {
+                string str = string.Format("第{0}个通道", i);
+                row = dt.NewRow();
+                row["通道序号"] = i;
+                Double data = 2 * i;
+                row["工程值"] = i+1;           
+                row["通道说明"] = str;
+                dt.Rows.Add(row);
+            }
+
+            dataGridViewData.DataSource = dt; 
         }
 
         private void SetChannelTableToGrid()
@@ -138,12 +146,25 @@ namespace Lua_test_CS
                 row["通道说明"] = tab.ChName_CHN;
                 dt.Rows.Add(row);
             }
-            
-            //MessageBox.Show(2.ToString("N", myNumFormatInfo));
-            dataGridViewData.DataSource = dt;
+            string[] ss = { "Add", "Mutiply", "Result", "Average", "GetMax", "GetMin" };
+            for (int i = 0; i < nJsNums; i++)
+            {
+                string str = string.Format("第{0}个通道", i);
+                row = dt.NewRow();
+                row["通道序号"] = i;
+                Double data = 2 * i;
+                row["工程值"] = 0.0;            //将double类型按照一定的格式转换成string类型
+                row["函数名称"] = ss[i];
+                dt.Rows.Add(row);
+            }
 
-            int n = dataGridViewData.Rows.Count;
+            dataGridViewData.DataSource = dt;
             dataGridViewData.Refresh();
+
+            //int n = dataGridViewData.Rows.Count;
+            //dataGridViewData.Refresh();
+            //MessageBox.Show("接收通道表完毕！");
+            //timer1.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -179,30 +200,15 @@ namespace Lua_test_CS
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //Lua netlua = new Lua();
-            //netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
-            //netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
-            //netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
-            ////netlua.DoFile(@"E:\2-lua\Lua_test_CS\Lua_test_CS\add.lua");
-            //netlua.DoFile(strLuaFilePath);
-            //SetData();
-            //netlua.GetFunction("Result").Call();
             netlua.GetFunction(tbResult.Text.Trim().ToString()).Call();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //Lua netlua = new Lua();
-            //netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
-            //netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
-            //netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
-            ////netlua.DoFile(@"E:\2-lua\Lua_test_CS\Lua_test_CS\add.lua");
-            //netlua.DoFile(strLuaFilePath);
-            //SetData();
-            //netlua.GetFunction("Average").Call();
             netlua.GetFunction(tbAverage.Text.Trim().ToString()).Call();
         }
 
+        //加载lua文件
         private void btnLoadLuaFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -222,16 +228,32 @@ namespace Lua_test_CS
                 button4.Enabled = true;
             }
 
-            netlua = new Lua();
-            netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
-            netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
-            netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
-            //netlua.DoFile(@"E:\2-lua\Lua_test_CS\Lua_test_CS\add.lua");
+            LoadLuaFile(strLuaFilePath);
+        }
 
-            netlua.DoFile(strLuaFilePath);
+        private void LoadLuaFile(string strPath)
+        {
+            if (strPath == null || strPath == "")
+            {
+                netlua = new Lua();
+                netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
+                netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
+                netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
+                netlua.DoFile(@"F:\2-lua\Lua_test_CS\Lua_test_CS\add.lua");
 
+                //netlua.DoFile(strLuaFilePath);
+                //timer1.Enabled = true;
+            }
+            else
+            {
+                netlua = new Lua();
+                netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
+                netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
+                netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
 
-
+                netlua.DoFile(strPath);
+                timer1.Enabled = true;
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)  //启动Lua编辑器
@@ -253,15 +275,10 @@ namespace Lua_test_CS
 
         private void button6_Click(object sender, EventArgs e)
         {
-            //Lua netlua = new Lua();
-            //netlua.RegisterFunction("SetData", this, this.GetType().GetMethod("SetData"));
-            //netlua.RegisterFunction("GetData", this, this.GetType().GetMethod("GetData"));
-            //netlua.RegisterFunction("SetDataByIdx", this, this.GetType().GetMethod("SetDataByIdx"));
-            ////netlua.DoFile(@"E:\2-lua\Lua_test_CS\Lua_test_CS\add.lua");
-            //netlua.DoFile(strLuaFilePath);
-            //SetData();
-            //netlua.GetFunction("Average").Call();
-            netlua.GetFunction("mysum").Call();
+            //netlua.GetFunction("mysum").Call();
+            object[] obj = netlua.GetFunction("math.min").Call(33, 55);
+
+            object[] obj1 = netlua.GetFunction("math.max").Call(33,55,66,44,77);
         }
 
         private void btn_ConnSvc_Click(object sender, EventArgs e)
@@ -280,10 +297,22 @@ namespace Lua_test_CS
                 MessageBox.Show("连接失败！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        const int nJsNums = 6;
         private void timer1_Tick(object sender, EventArgs e)
         {
+            for (int i = 0; i < dataNums + nJsNums; i++)
+            {
+                dataGridViewData.Rows[i].Cells[1].Value = data[i].ToString("F");
+            }
 
+            netlua.GetFunction("Add").Call();   
+            netlua.GetFunction("Mutiply").Call();
+            netlua.GetFunction("Result").Call();
+            netlua.GetFunction("Average").Call();
+            netlua.GetFunction("GetMax").Call();
+            netlua.GetFunction("GetMin").Call();
+            //SetDataByIdx(1000);
+            dataGridViewData.Refresh();
         }
     }
 }

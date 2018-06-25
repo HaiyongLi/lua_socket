@@ -179,7 +179,7 @@ namespace Lua_test_CS
 
                             m_nRcvChannelNums++;
                             m_bIsRcvChannelTable = true;
-                            data = new float[nDataNums];
+                            data = new float[nDataNums + nJsNums];
 
                             //如果是用socket接收通道表，从数据库读取数据，在接受完通道表后需要将socket关闭
                             //socket.Close();
@@ -187,7 +187,8 @@ namespace Lua_test_CS
                             //timer1.Enabled = true;
                             //timer1.Start();
 
-                            SetChannelTableToGrid();
+                            //SetChannelTableToGrid();//错误用法
+                            dataGridViewData.Invoke(setGridChannel);
                         }
                     }
 
@@ -227,7 +228,7 @@ namespace Lua_test_CS
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show("接收数据错误！"+ " 错误信息：\r\n" + ex.ToString());
+                    MessageBox.Show("接收数据错误！"+ " 错误信息：\r\n" + ex.ToString());
                     //listBox_info.Items.Add("接收数据错误！");
                     break;
                 }
